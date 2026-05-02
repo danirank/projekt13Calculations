@@ -6,7 +6,4 @@ app = FastAPI()
 app.include_router(router)
 
 
-
-#all_single_rows = getSingleRows(row)
-
-
+# all_single_rows = getSingleRows(row)

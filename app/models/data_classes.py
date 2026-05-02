@@ -1,9 +1,12 @@
 from dataclasses import dataclass
 
+
 @dataclass
 class DisagreementOutcomeDto:
     outcome: str
     value: float
+
+
 @dataclass
 class MatchInfoDto:
     MatchNo: int
@@ -27,24 +30,23 @@ class MatchInfoDto:
     Disagreement: float
     DisagreementWithOutcome: DisagreementOutcomeDto
 
-@dataclass 
+
+@dataclass
 class MarketOddsReduce:
     MinOdds: float | None = None
     MaxOdds: float | None = None
 
 
-@dataclass 
+@dataclass
 class PeopleOddsReduce:
     MinOdds: float | None = None
     MaxOdds: float | None = None
 
 
-@dataclass 
+@dataclass
 class KvotReduce:
     MinKvot: float | None = None
     MaxKvot: float | None = None
-
-
 
 
 @dataclass
