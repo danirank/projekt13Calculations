@@ -48,6 +48,11 @@ class KvotReduce:
     MinKvot: float | None = None
     MaxKvot: float | None = None
 
+@dataclass
+class FilterValue:
+    Market: MarketOddsReduce
+    People: PeopleOddsReduce
+    Kvot: KvotReduce
 
 @dataclass
 class SignPick:
