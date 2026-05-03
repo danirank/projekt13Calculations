@@ -16,24 +16,17 @@ mock_single_row = ["1", "X", "X", "1", "1", "2", "X", "X", "1", "1", "1", "1", "
 mock_single_row2 = ["X", "X", "X", "1", "1", "2", "X", "X", "1", "1", "1", "1", "1"]
 
 mock_filter_value = FilterValue(
-    Market= MarketOddsReduce(
-        MinOdds= 0.0,
-        MaxOdds= 100000000
-    ),
-    People= PeopleOddsReduce(
-        MinOdds= None,
-        MaxOdds= None
-    ), 
-    Kvot= KvotReduce (
-        MinKvot =None,
-        MaxKvot= None
-    ) 
+    Market=MarketOddsReduce(MinOdds=0.0, MaxOdds=100000000),
+    People=PeopleOddsReduce(MinOdds=None, MaxOdds=None),
+    Kvot=KvotReduce(MinKvot=None, MaxKvot=None),
 )
 
 mock_sign_filter = ReductionFilterDto(
     groups=[
         GroupReduction(
-            picks=[SignPick(1, "1"), SignPick(2, "1"), SignPick(3,"1")], min_hits=1, max_hits=2
+            picks=[SignPick(1, "1"), SignPick(2, "1"), SignPick(3, "1")],
+            min_hits=1,
+            max_hits=2,
         )
     ]
 )

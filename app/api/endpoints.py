@@ -1,16 +1,14 @@
-
-
 from fastapi import APIRouter
 from pydantic import BaseModel
 from app.models.data_classes import FilterValue, MatchInfoDto, ReductionFilterDto
-from app.services.calculation_service import reduce_service 
+from app.services.calculation_service import reduce_service
+
 router = APIRouter()
 
 
 @router.get("/")
 async def root():
     return {"status": "Api running successfully"}
-
 
 
 class ReduceRequest(BaseModel):
@@ -22,5 +20,6 @@ class ReduceRequest(BaseModel):
 
 @router.post("/reduce")
 def reduce(request: ReduceRequest):
-     return reduce_service(request.base_row, request.coupon, request.filter_value, request.reduce_filter)
-    
+    return reduce_service(
+        request.base_row, request.coupon, request.filter_value, request.reduce_filter
+    )

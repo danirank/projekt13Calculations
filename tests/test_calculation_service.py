@@ -22,7 +22,9 @@ def test_reduce_service_uses_generated_single_rows(monkeypatch):
         fake_filter_value_and_row_reductions,
     )
 
-    result = calculation_service.reduce_service(["1X"], ["coupon"], "filters", "reductions")
+    result = calculation_service.reduce_service(
+        ["1X"], ["coupon"], "filters", "reductions"
+    )
 
     assert result == ["filtered"]
     assert captured == {
@@ -83,8 +85,36 @@ def test_reduce_service_with_13_games_returns_reduced_rows(monkeypatch):
     )
 
     assert len(captured["single_rows"]) == 8
-    assert captured["single_rows"][0] == ("1", "1", "1", "1", "1", "2", "X", "X", "1", "1", "1", "1", "1")
-    assert captured["single_rows"][-1] == ("X", "X", "X", "1", "1", "2", "X", "X", "1", "1", "1", "1", "1")
+    assert captured["single_rows"][0] == (
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "2",
+        "X",
+        "X",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+    )
+    assert captured["single_rows"][-1] == (
+        "X",
+        "X",
+        "X",
+        "1",
+        "1",
+        "2",
+        "X",
+        "X",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+    )
     assert captured["filter_value"] == mock_filter_value
     assert captured["reduce_filter"] == mock_sign_filter
     assert result == captured["single_rows"][:3]

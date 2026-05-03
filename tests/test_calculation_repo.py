@@ -47,7 +47,12 @@ def test_calc_number_of_rows_returns_one_for_single_signs():
 
 
 def test_get_single_rows_expands_all_permutations():
-    assert getSingleRows(["1X", "12"]) == [("1", "1"), ("1", "2"), ("X", "1"), ("X", "2")]
+    assert getSingleRows(["1X", "12"]) == [
+        ("1", "1"),
+        ("1", "2"),
+        ("X", "1"),
+        ("X", "2"),
+    ]
 
 
 def test_get_single_rows_returns_one_row_for_fixed_input():
@@ -78,7 +83,12 @@ def test_append_calculations_to_all_rows_returns_row_objects_for_each_combinatio
 def test_append_calculations_to_all_rows_preserves_generated_sign_order():
     rows = append_calculations_to_all_rows(["1X", "12"], _small_matches())
 
-    assert [row.signs for row in rows] == [("1", "1"), ("1", "2"), ("X", "1"), ("X", "2")]
+    assert [row.signs for row in rows] == [
+        ("1", "1"),
+        ("1", "2"),
+        ("X", "1"),
+        ("X", "2"),
+    ]
 
 
 def test_get_list_of_all_rows_with_values_maps_each_row_to_a_row_object():
