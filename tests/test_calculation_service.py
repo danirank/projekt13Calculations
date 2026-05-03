@@ -1,21 +1,54 @@
 import app.services.calculation_service as calculation_service
-from app.data.mock_coupon import mock_filter_value, mock_row, mock_sign_filter
+from app.models.data_classes import (
+    FilterValue,
+    GroupReduction,
+    KvotReduce,
+    MarketOddsReduce,
+    PeopleOddsReduce,
+    ReductionFilterDto,
+    SignPick,
+)
+
+mock_row = ["1X", "1X", "1X", "1", "1", "2", "X", "X", "1", "1", "1", "1", "1"]
+mock_filter_value = FilterValue(
+    Market=MarketOddsReduce(MinOdds=0.0, MaxOdds=100000000),
+    People=PeopleOddsReduce(MinOdds=None, MaxOdds=None),
+    Kvot=KvotReduce(MinKvot=None, MaxKvot=None),
+)
+mock_sign_filter = ReductionFilterDto(
+    groups=[
+        GroupReduction(
+            picks=[
+                SignPick(match_no=1, sign="1"),
+                SignPick(match_no=2, sign="1"),
+                SignPick(match_no=3, sign="1"),
+            ],
+            min_hits=1,
+            max_hits=2,
+        )
+    ]
+)
 
 
-def test_reduce_service_uses_generated_single_rows(monkeypatch):
+def test_reduce_service_adds_values_then_filters(monkeypatch):
     captured = {}
 
-    def fake_get_single_rows(base_row):
+    def fake_append_calculations_to_all_rows(base_row, coupon):
         captured["base_row"] = base_row
+        captured["coupon"] = coupon
         return ["expanded"]
 
-    def fake_filter_value_and_row_reductions(single_rows, filter_value, reduce_filter):
-        captured["single_rows"] = single_rows
+    def fake_filter_value_and_row_reductions(rows, filter_value, reduce_filter):
+        captured["rows"] = rows
         captured["filter_value"] = filter_value
         captured["reduce_filter"] = reduce_filter
         return ["filtered"]
 
-    monkeypatch.setattr(calculation_service, "getSingleRows", fake_get_single_rows)
+    monkeypatch.setattr(
+        calculation_service,
+        "append_calculations_to_all_rows",
+        fake_append_calculations_to_all_rows,
+    )
     monkeypatch.setattr(
         calculation_service,
         "filter_value_and_row_reductions",
@@ -29,24 +62,29 @@ def test_reduce_service_uses_generated_single_rows(monkeypatch):
     assert result == ["filtered"]
     assert captured == {
         "base_row": ["1X"],
-        "single_rows": ["expanded"],
+        "coupon": ["coupon"],
+        "rows": ["expanded"],
         "filter_value": "filters",
         "reduce_filter": "reductions",
     }
 
 
 def test_reduce_service_returns_filter_result_without_using_coupon(monkeypatch):
-    def fake_get_single_rows(base_row):
-        return [tuple(base_row)]
+    def fake_append_calculations_to_all_rows(base_row, coupon):
+        return {"base_row": base_row, "coupon": coupon}
 
-    def fake_filter_value_and_row_reductions(single_rows, filter_value, reduce_filter):
+    def fake_filter_value_and_row_reductions(rows, filter_value, reduce_filter):
         return {
-            "rows": single_rows,
+            "rows": rows,
             "filter_value": filter_value,
             "reduce_filter": reduce_filter,
         }
 
-    monkeypatch.setattr(calculation_service, "getSingleRows", fake_get_single_rows)
+    monkeypatch.setattr(
+        calculation_service,
+        "append_calculations_to_all_rows",
+        fake_append_calculations_to_all_rows,
+    )
     monkeypatch.setattr(
         calculation_service,
         "filter_value_and_row_reductions",
@@ -56,20 +94,31 @@ def test_reduce_service_returns_filter_result_without_using_coupon(monkeypatch):
     result = calculation_service.reduce_service(["1", "X"], ["ignored"], None, "reduce")
 
     assert result == {
-        "rows": [("1", "X")],
+        "rows": {"base_row": ["1", "X"], "coupon": ["ignored"]},
         "filter_value": None,
         "reduce_filter": "reduce",
     }
 
 
-def test_reduce_service_with_13_games_returns_reduced_rows(monkeypatch):
+def test_reduce_service_with_13_games_passes_rows_to_filter(monkeypatch):
     captured = {}
 
-    def fake_filter_value_and_row_reductions(single_rows, filter_value, reduce_filter):
-        captured["single_rows"] = single_rows
+    def fake_append_calculations_to_all_rows(base_row, coupon):
+        captured["base_row"] = base_row
+        captured["coupon"] = coupon
+        return ["row1", "row2", "row3", "row4"]
+
+    def fake_filter_value_and_row_reductions(rows, filter_value, reduce_filter):
+        captured["rows"] = rows
         captured["filter_value"] = filter_value
         captured["reduce_filter"] = reduce_filter
-        return single_rows[:3]
+        return rows[:3]
+
+    monkeypatch.setattr(
+        calculation_service,
+        "append_calculations_to_all_rows",
+        fake_append_calculations_to_all_rows,
+    )
 
     monkeypatch.setattr(
         calculation_service,
@@ -84,37 +133,9 @@ def test_reduce_service_with_13_games_returns_reduced_rows(monkeypatch):
         mock_sign_filter,
     )
 
-    assert len(captured["single_rows"]) == 8
-    assert captured["single_rows"][0] == (
-        "1",
-        "1",
-        "1",
-        "1",
-        "1",
-        "2",
-        "X",
-        "X",
-        "1",
-        "1",
-        "1",
-        "1",
-        "1",
-    )
-    assert captured["single_rows"][-1] == (
-        "X",
-        "X",
-        "X",
-        "1",
-        "1",
-        "2",
-        "X",
-        "X",
-        "1",
-        "1",
-        "1",
-        "1",
-        "1",
-    )
+    assert captured["base_row"] == mock_row
+    assert captured["coupon"] == []
+    assert captured["rows"] == ["row1", "row2", "row3", "row4"]
     assert captured["filter_value"] == mock_filter_value
     assert captured["reduce_filter"] == mock_sign_filter
-    assert result == captured["single_rows"][:3]
+    assert result == captured["rows"][:3]
