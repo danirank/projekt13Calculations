@@ -51,7 +51,5 @@ jobs:
       - name: Add coverage to summary
         if: always()
         run: |
-        echo "## Coverage Report" >> $GITHUB_STEP_SUMMARY
-        pytest --cov=app --cov-report=term >> $GITHUB_STEP_SUMMARY
-
-      
+          echo "## Coverage Report" >> $GITHUB_STEP_SUMMARY
+          pytest --cov=app --cov-report=term >> $GITHUB_STEP_SUMMARY      
