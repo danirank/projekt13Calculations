@@ -1,5 +1,4 @@
-from unittest import result
-from urllib import request
+
 
 from fastapi import APIRouter
 from pydantic import BaseModel

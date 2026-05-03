@@ -1,7 +1,5 @@
 from app.data.mock_coupon import (
-    mock_filter_value,
     mock_matches,
-    mock_row,
     mock_sign_filter,
     mock_single_row,
     mock_single_row2,

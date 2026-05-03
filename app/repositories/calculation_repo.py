@@ -4,10 +4,7 @@ import math
 from app.models.data_classes import (
     FilterValue,
     GroupReduction,
-    KvotReduce,
-    MarketOddsReduce,
     MatchInfoDto,
-    PeopleOddsReduce,
     ReductionFilterDto,
     Row,
 )
