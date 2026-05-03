@@ -12,7 +12,6 @@ name: Reusable Python Workflow
 
 jobs:
   test:
-    name: Build and test
     runs-on: ubuntu-latest
 
     steps:
