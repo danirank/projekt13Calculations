@@ -12,9 +12,11 @@ name: Reusable Python Workflow
 
 jobs:
   test:
+    name: Build and test
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout code 
       - uses: actions/checkout@v4
 
       - name: Set up Python ${{ inputs.python-version }}
@@ -38,3 +40,5 @@ jobs:
 
       - name: Run tests
         run: pytest --cov=. --cov-report=xml
+
+  

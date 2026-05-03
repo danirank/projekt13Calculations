@@ -1,14 +1,12 @@
-from dataclasses import dataclass
+from pydantic import BaseModel, Field
 
 
-@dataclass
-class DisagreementOutcomeDto:
+class DisagreementOutcomeDto(BaseModel):
     outcome: str
     value: float
 
 
-@dataclass
-class MatchInfoDto:
+class MatchInfoDto(BaseModel):
     MatchNo: int
     HomeTeam: str
     AwayTeam: str
@@ -31,42 +29,51 @@ class MatchInfoDto:
     DisagreementWithOutcome: DisagreementOutcomeDto
 
 
-@dataclass
-class MarketOddsReduce:
+class MarketOddsReduce(BaseModel):
     MinOdds: float | None = None
     MaxOdds: float | None = None
 
 
-@dataclass
-class PeopleOddsReduce:
+class PeopleOddsReduce(BaseModel):
     MinOdds: float | None = None
     MaxOdds: float | None = None
 
 
-@dataclass
-class KvotReduce:
+class KvotReduce(BaseModel):
     MinKvot: float | None = None
     MaxKvot: float | None = None
 
-@dataclass
-class FilterValue:
-    Market: MarketOddsReduce
-    People: PeopleOddsReduce
-    Kvot: KvotReduce
 
-@dataclass
-class SignPick:
+class FilterValue(BaseModel):
+    Market: MarketOddsReduce = Field(default_factory=MarketOddsReduce)
+    People: PeopleOddsReduce = Field(default_factory=PeopleOddsReduce)
+    Kvot: KvotReduce = Field(default_factory=KvotReduce)
+
+
+class SignPick(BaseModel):
     match_no: int
     sign: str
 
 
-@dataclass
-class GroupReduction:
-    picks: list[SignPick]
+class GroupReduction(BaseModel):
+    picks: list[SignPick] = Field(default_factory=list)
     min_hits: int | None = None
     max_hits: int | None = None
 
 
-@dataclass
-class ReductionFilterDto:
-    groups: list[GroupReduction]
+class ReductionFilterDto(BaseModel):
+    groups: list[GroupReduction] = Field(default_factory=list)
+
+
+class Row(BaseModel):
+    signs: list[str]
+    kvot: float
+    people_odds: float
+    market_odds: float
+
+
+class ReduceRequest(BaseModel):
+    base_row: list[str]
+    coupon: list[MatchInfoDto]
+    filter_value: FilterValue = Field(default_factory=FilterValue)
+    reduce_filter: ReductionFilterDto = Field(default_factory=ReductionFilterDto)
