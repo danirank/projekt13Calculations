@@ -77,3 +77,12 @@ class ReduceRequest(BaseModel):
     coupon: list[MatchInfoDto]
     filter_value: FilterValue = Field(default_factory=FilterValue)
     reduce_filter: ReductionFilterDto = Field(default_factory=ReductionFilterDto)
+
+
+
+
+
+class CouponDataDto(BaseModel):
+    favorite: float
+    people: float
+    value: float

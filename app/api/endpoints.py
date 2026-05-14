@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-from app.models.data_classes import FilterValue, MatchInfoDto, ReductionFilterDto
+from app.models.data_classes import CouponDataDto, FilterValue, MatchInfoDto, ReductionFilterDto, Row
 from app.services.calculation_service import reduce_service, init_coupon_data
 
 router = APIRouter()
@@ -21,13 +21,13 @@ class InitCouponDataRequest(BaseModel):
     coupon: list[MatchInfoDto]
 
 
-@router.post("/reduce")
+@router.post("/reduce", response_model=list[Row])
 def reduce(request: ReduceRequest):
     return reduce_service(
         request.base_row, request.coupon, request.filter_value, request.reduce_filter
     )
 
 
-@router.get("/data")
+@router.post("/data", response_model=CouponDataDto)
 def reduce(request: InitCouponDataRequest):
     return init_coupon_data(request.coupon)
