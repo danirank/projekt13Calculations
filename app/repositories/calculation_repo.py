@@ -9,6 +9,26 @@ from app.models.data_classes import (
     Row,
 )
 
+def calc_favorite_odds(matches: list[MatchInfoDto]) -> float:
+    product = 1.0
+    for match in matches:
+        lowest_odds = min(match.Odds1, match.OddsX, match.Odds2)
+        product *= lowest_odds
+    return round(product, 0)
+
+def calc_people_odds(matches: list[MatchInfoDto]) -> float:
+    product = 1.0
+    for match in matches:
+        lowest_odds = min(match.FolkOdds1, match.FolkOddsX, match.FolkOdds2)
+        product *= lowest_odds
+    return round(product, 0)
+
+def calc_value_of_favorite(matches: list[MatchInfoDto]) -> float:
+    people = calc_people_odds(matches)
+    favorite = calc_favorite_odds(matches)
+    return round (people / favorite, 2)
+
+    
 
 def calcNumberOfRows(row: list[str]):
     return reduce(lambda acc, x: acc * len(x), row, 1)
