@@ -1,4 +1,5 @@
 from app.models.data_classes import (
+    FilterValue,
     MatchInfoDto,
     DisagreementOutcomeDto,
     MarketOddsReduce,
@@ -9,20 +10,29 @@ from app.models.data_classes import (
     ReductionFilterDto,
 )
 
-mock_row = ["1X", "X", "1", "1", "1", "2", "X", "X", "1X", "12", "1", "1", "1"]
+mock_row = ["1X", "1X", "1X", "1", "1", "2", "X", "X", "1", "1", "1", "1", "1"]
 
-mock_single_row = ["1", "X", "1", "1", "1", "2", "X", "X", "1", "1", "1", "1", "1"]
-mock_single_row2 = ["X", "X", "1", "1", "1", "2", "X", "X", "1", "1", "1", "1", "1"]
+mock_single_row = ["1", "X", "X", "1", "1", "2", "X", "X", "1", "1", "1", "1", "1"]
+mock_single_row2 = ["X", "X", "X", "1", "1", "2", "X", "X", "1", "1", "1", "1", "1"]
+
+mock_filter_value = FilterValue(
+    Market=MarketOddsReduce(MinOdds=0.0, MaxOdds=100000000),
+    People=PeopleOddsReduce(MinOdds=None, MaxOdds=None),
+    Kvot=KvotReduce(MinKvot=None, MaxKvot=None),
+)
+
 mock_sign_filter = ReductionFilterDto(
     groups=[
         GroupReduction(
-            picks=[SignPick(1, "1"), SignPick(2, "1")], min_hits=1, max_hits=2
+            picks=[SignPick(1, "1"), SignPick(2, "1"), SignPick(3, "1")],
+            min_hits=1,
+            max_hits=2,
         )
     ]
 )
 
 
-matches = [
+mock_matches = [
     MatchInfoDto(
         1,
         "IFK Göteborg",

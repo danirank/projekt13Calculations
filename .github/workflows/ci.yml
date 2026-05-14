@@ -2,7 +2,7 @@ name: "CI"
 
 on:
   push:
-    branches: [main]
+    branches: [main, dev]
   pull_request:
     branches: [main]
 
@@ -12,3 +12,4 @@ jobs:
     with:
       python-version: "3.12"
       requirements-file: "requirements.txt"
+  
