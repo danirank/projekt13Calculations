@@ -79,9 +79,6 @@ class ReduceRequest(BaseModel):
     reduce_filter: ReductionFilterDto = Field(default_factory=ReductionFilterDto)
 
 
-
-
-
 class CouponDataDto(BaseModel):
     favorite: float
     people: float
