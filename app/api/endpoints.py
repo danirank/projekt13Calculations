@@ -29,5 +29,5 @@ def reduce(request: ReduceRequest):
 
 
 @router.post("/data", response_model=CouponDataDto)
-def reduce(request: InitCouponDataRequest):
+def init_data(request: InitCouponDataRequest):
     return init_coupon_data(request.coupon)
