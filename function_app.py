@@ -12,7 +12,7 @@ from app.models.data_classes import (
 from app.services.calculation_service import init_coupon_data, reduce_service
 
 
-app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
+app = func.FunctionApp()
 
 
 class ReduceRequest(BaseModel):
@@ -42,15 +42,19 @@ def _validation_response(error: ValidationError) -> func.HttpResponse:
     return _json_response({"detail": details}, 422)
 
 
-@app.route(route="health", methods=["GET"])
-def health(_request: func.HttpRequest) -> func.HttpResponse:
-    return _json_response({"status": "Api running successfully"})
+@app.route(route="health", methods=["GET"], auth_level=func.AuthLevel.ANONYMOUS)
+def health(req: func.HttpRequest) -> func.HttpResponse:
+    return func.HttpResponse(
+        json.dumps({"status": "Api running successfully"}),
+        status_code=200,
+        mimetype="application/json"
+    )
 
 
 @app.route(route="reduce", methods=["POST"])
-def reduce(request: func.HttpRequest) -> func.HttpResponse:
+def reduce(req: func.HttpRequest) -> func.HttpResponse:
     try:
-        payload = ReduceRequest.model_validate(request.get_json())
+        payload = ReduceRequest.model_validate(req.get_json())
         result = reduce_service(
             payload.base_row,
             payload.coupon,
@@ -65,9 +69,9 @@ def reduce(request: func.HttpRequest) -> func.HttpResponse:
 
 
 @app.route(route="data", methods=["POST"])
-def data(request: func.HttpRequest) -> func.HttpResponse:
+def data(req: func.HttpRequest) -> func.HttpResponse:
     try:
-        payload = InitCouponDataRequest.model_validate(request.get_json())
+        payload = InitCouponDataRequest.model_validate(req.get_json())
         return _json_response(init_coupon_data(payload.coupon))
     except ValidationError as error:
         return _validation_response(error)
