@@ -42,7 +42,7 @@ def _validation_response(error: ValidationError) -> func.HttpResponse:
     return _json_response({"detail": details}, 422)
 
 
-@app.route(route="", methods=["GET"])
+@app.route(route="health", methods=["GET"])
 def health(_request: func.HttpRequest) -> func.HttpResponse:
     return _json_response({"status": "Api running successfully"})
 
