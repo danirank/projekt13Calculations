@@ -1,6 +1,7 @@
 .venv/
 venv/
 env/
+.python_packages/
 .pytest_cache/
 .ruff_cache/
 .vscode/

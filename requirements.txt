@@ -1,8 +1,2 @@
-absl-py==2.4.0
-annotated-doc==0.0.4
-annotated-types==0.7.0
-anyio==4.13.0
-click==8.3.3
-colorama==0.4.6
 azure-functions==1.23.0
 pydantic==2.13.3
