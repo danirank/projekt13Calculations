@@ -12,7 +12,7 @@ from app.models.data_classes import (
 from app.services.calculation_service import init_coupon_data, reduce_service
 
 
-app = func.FunctionApp()
+app = func.FunctionApp(auth_level = func.AuthLevel.ANONYMOUS)
 
 
 class ReduceRequest(BaseModel):
