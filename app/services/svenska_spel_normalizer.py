@@ -16,16 +16,17 @@ class NormalizedCouponDto(BaseModel):
     model_config = {"alias_generator": to_camel, "populate_by_name": True}
 
     TipType: str
-    Week: int
+    Week: int | None
     Turnover: str | None
     BetStop: str | None
     LastUpdated: str | None
     Matches: list[MatchInfoDto]
-    DrawNumber: int
+    DrawNumber: int | None
     DrawState: str | None = None
     DrawComment: str | None = None
     RowPrice: str | None = None
-    SourceData: dict[str, Any]
+    SourceData: dict[str, Any] | None
+    Status: str = "ready"
 
 
 def _number(value: Any, field_name: str) -> float:
@@ -174,7 +175,18 @@ def normalize_draws(
         and draw.get("drawState") == "Open"
     ]
     if not candidates:
-        raise LookupError(f"No open {canonical_tip_type} draw was returned")
+        return NormalizedCouponDto(
+            TipType=canonical_tip_type,
+            Week=None,
+            Turnover=None,
+            BetStop=None,
+            LastUpdated=None,
+            Matches=[],
+            DrawNumber=None,
+            DrawState="NoOpenDraw",
+            SourceData=None,
+            Status="no-open-draw",
+        )
     draw = candidates[0]
     draw_number = draw.get("drawNumber")
     if not isinstance(draw_number, int):

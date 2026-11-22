@@ -13,7 +13,8 @@ preserve the existing gateway contract:
 fields, computes the odds ratios, and preserves the selected draw under
 `sourceData`. The route accepts lowercase `stryktipset` and `europatipset` and
 only processes open draws. The normalized `tipType` response keeps its current
-display casing (`Stryktipset` or `Europatipset`).
+display casing (`Stryktipset` or `Europatipset`). If there is no open draw, it
+returns HTTP 200 with `status: "no-open-draw"` and an empty `matches` array.
 
 ## Run locally
 
