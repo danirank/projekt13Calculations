@@ -72,6 +72,23 @@ class MatchInfoDto(BaseModel):
     DisagreementWithOutcome: DisagreementOutcomeDto = Field(
         description="Outcome and value for the largest disagreement."
     )
+    MatchId: int | None = None
+    MatchStart: str | None = None
+    HomeTeamShortName: str | None = None
+    AwayTeamShortName: str | None = None
+    League: str | None = None
+    Country: str | None = None
+    StartOdds1: float | None = None
+    StartOddsX: float | None = None
+    StartOdds2: float | None = None
+    FavouritePct1: float | None = None
+    FavouritePctX: float | None = None
+    FavouritePct2: float | None = None
+    FolkRefPct1: float | None = None
+    FolkRefPctX: float | None = None
+    FolkRefPct2: float | None = None
+    DistributionDate: str | None = None
+    DistributionRefDate: str | None = None
 
 
 class MarketOddsReduce(BaseModel):

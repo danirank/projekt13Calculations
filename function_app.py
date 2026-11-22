@@ -10,6 +10,7 @@ from app.models.data_classes import (
     ReductionFilterDto,
 )
 from app.services.calculation_service import init_coupon_data, reduce_service
+from app.services.svenska_spel_normalizer import normalize_draws
 
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
@@ -28,7 +29,7 @@ class InitCouponDataRequest(BaseModel):
 
 def _json_response(value, status_code: int = 200) -> func.HttpResponse:
     if hasattr(value, "model_dump"):
-        value = value.model_dump(mode="json")
+        value = value.model_dump(mode="json", by_alias=True)
     return func.HttpResponse(
         json.dumps(value), status_code=status_code, mimetype="application/json"
     )
@@ -73,6 +74,22 @@ def data(req: func.HttpRequest) -> func.HttpResponse:
     try:
         payload = InitCouponDataRequest.model_validate(req.get_json())
         return _json_response(init_coupon_data(payload.coupon))
+    except ValidationError as error:
+        return _validation_response(error)
+    except ValueError as error:
+        return _json_response({"detail": str(error)}, 400)
+
+
+@app.route(route="normalize-draw", methods=["POST"])
+def normalize_draw(req: func.HttpRequest) -> func.HttpResponse:
+    tip_type = req.params.get("tipType")
+    if tip_type is None:
+        return _json_response({"detail": "Missing query parameter: tipType"}, 400)
+    try:
+        result = normalize_draws(req.get_json(), tip_type)
+        return _json_response(result)
+    except LookupError as error:
+        return _json_response({"detail": str(error)}, 404)
     except ValidationError as error:
         return _validation_response(error)
     except ValueError as error:

@@ -6,6 +6,14 @@ preserve the existing gateway contract:
 - `GET /api/`
 - `POST /api/reduce`
 - `POST /api/data`
+- `POST /api/normalize-draw?tipType=stryktipset|europatipset`
+
+`normalize-draw` accepts the JSON envelope returned by Svenska Spel's
+`/draw/1/{product}/draws` endpoint. It returns the existing coupon and match
+fields, computes the odds ratios, and preserves the selected draw under
+`sourceData`. The route accepts lowercase `stryktipset` and `europatipset` and
+only processes open draws. The normalized `tipType` response keeps its current
+display casing (`Stryktipset` or `Europatipset`).
 
 ## Run locally
 
